@@ -2,22 +2,22 @@
 #include "InputParser.hpp"
 
 int main(int argc, const char * argv[]) {
-    string inputString = "/Users/Ting/Desktop/CS5592SP17StochasticShortestPath3.txt";
+    std::string inputString = "/Users/Ting/Desktop/CS5592SP17StochasticShortestPath3.txt";
     InputParser IP;
     EdgeMatrix E = IP.parser(inputString);
-    cout << "No. of nodes: " << E.getNumOfNodes() << '\n';
-    cout << "Source: " << E.getSource() << '\n';
-    cout << "Destination: " << E.getDestination() << '\n';
-    cout << "E matrix" << '\n';
-    vector<vector<EdgeWeight>> edge_weight = E.getE();
+    std::cout << "No. of nodes: " << E.getNumOfNodes() << '\n';
+    std::cout << "Source: " << E.getSource() << '\n';
+    std::cout << "Destination: " << E.getDestination() << '\n';
+    std::cout << "E matrix" << '\n';
+    std::vector<std::vector<EdgeWeight>> edge_weight = E.getE();
     for (int i = 0; i < edge_weight.size(); i++) {
         for (int j = 0; j < edge_weight[i].size(); j++) {
-            cout << "(";
-            cout << edge_weight[i][j].getMean() <<" ";
-            cout << edge_weight[i][j].getVariance() <<" ";
-            cout << edge_weight[i][j].getC_square() <<")";
+            std::cout << "(";
+            std::cout << edge_weight[i][j].getMean() <<" ";
+            std::cout << edge_weight[i][j].getVariance() <<" ";
+            std::cout << edge_weight[i][j].getC_square() <<")";
         }
-        cout << '\n';
+        std::cout << '\n';
     }
     return 0;
 }

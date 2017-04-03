@@ -24,4 +24,5 @@ public:
     void setVariance(double varianceValue);
     void setC_square(double c_squareValue);
 };
+
 #endif /* EdgeWeight_hpp */

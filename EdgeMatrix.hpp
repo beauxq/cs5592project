@@ -13,14 +13,12 @@
 #include <vector>
 #include "EdgeWeight.hpp"
 
-using namespace std;
-
 class EdgeMatrix{
 private:
     int source;
     int destination;
     int numOfNodes;
-    vector<vector<EdgeWeight>> E;
+    std::vector<std::vector<EdgeWeight>> E;
 public:
     int getSource();
     void setSource(int s);
@@ -28,7 +26,8 @@ public:
     void setDestination(int d);
     int getNumOfNodes();
     void setNumOfNodes(int n);
-    vector<vector<EdgeWeight>> getE();
-    void setE(vector<vector<EdgeWeight>> e);
+    std::vector<std::vector<EdgeWeight>> getE();
+    void setE(std::vector<std::vector<EdgeWeight>> e);
 };
+
 #endif /* EdgeMatrix_hpp */

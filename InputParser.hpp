@@ -15,11 +15,9 @@
 #include <fstream>
 #include <math.h>
 
-using namespace std;
-
 class InputParser{
 public:
-    EdgeMatrix parser(string& fileName);
+    EdgeMatrix parser(const std::string& fileName);
 };
 
 #endif /* InputParser_hpp */

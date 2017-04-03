@@ -7,20 +7,23 @@
 //
 
 #include "InputParser.hpp"
-#include <iostream>
 
-EdgeMatrix InputParser::parser(string& fileName){
+#include <iostream>
+#include <string>
+#include <sstream>
+
+EdgeMatrix InputParser::parser(const std::string& fileName){
     EdgeMatrix edge;
-    vector<vector<EdgeWeight>> e;
-    ifstream infile(fileName);
+    std::vector<std::vector<EdgeWeight>> e;
+    std::ifstream infile(fileName);
     while(infile){
-        vector<string> lines;
-        string s;
+        std::vector<std::string> lines;
+        std::string s;
         if(!getline(infile, s))
             break;
-        istringstream ss(s);
+        std::istringstream ss(s);
         while (ss) {
-            string st;
+            std::string st;
             if(!getline(ss, st, ','))
                break;
             lines.push_back(st);

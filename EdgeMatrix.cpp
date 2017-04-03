@@ -8,6 +8,8 @@
 
 #include "EdgeMatrix.hpp"
 
+#include <vector>
+
 int EdgeMatrix::getSource(){
     return source;
 }
@@ -32,10 +34,10 @@ void EdgeMatrix::setNumOfNodes(int n){
     numOfNodes = n;
 }
 
-vector<vector<EdgeWeight>> EdgeMatrix::getE(){
+std::vector<std::vector<EdgeWeight>> EdgeMatrix::getE(){
     return E;
 }
 
-void EdgeMatrix::setE(vector<vector<EdgeWeight>> e){
+void EdgeMatrix::setE(std::vector<std::vector<EdgeWeight>> e){
     E = e;
 }
