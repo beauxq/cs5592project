@@ -1,5 +1,5 @@
 //
-//  EdgeMatrix.hpp
+//  Graph.hpp
 //  Dijkstra's shortest uncertain path algorithm
 //
 //  Created by Ting Xia on 4/2/17.
@@ -12,12 +12,12 @@
 #include <vector>
 #include "EdgeWeight.hpp"
 
-class EdgeMatrix{
+class Graph{
 private:
     int source;
     int destination;
     int numOfNodes;
-    std::vector<std::vector<EdgeWeight>> E;
+    std::vector<std::vector<EdgeWeight>> adjacencyMatrix;
 public:
     int getSource() const;
     void setSource(int s);
@@ -25,8 +25,8 @@ public:
     void setDestination(int d);
     int getNumOfNodes() const;
     void setNumOfNodes(int n);
-    const std::vector<std::vector<EdgeWeight>>& getE() const;
-    void setE(const std::vector<std::vector<EdgeWeight>>& e);
+    const std::vector<std::vector<EdgeWeight>>& getAdjacencyMatrix() const;
+    void setAdjacencyMatrix(const std::vector<std::vector<EdgeWeight>> &e);
 };
 
 #endif /* EdgeMatrix_hpp */

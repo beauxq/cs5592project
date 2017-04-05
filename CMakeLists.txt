@@ -7,6 +7,6 @@ set(SOURCE_FILES
         main.cpp
         InputParser.cpp
         EdgeWeight.cpp
-        EdgeMatrix.cpp
+        Graph.cpp
         DataInputException.h)
 add_executable(cs5592project ${SOURCE_FILES})

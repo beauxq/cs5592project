@@ -15,11 +15,11 @@
 #include <fstream>
 #include <math.h>
 
-#include "EdgeMatrix.hpp"
+#include "Graph.hpp"
 #include "DataInputException.h"
 
-EdgeMatrix InputParser::getGraphFromFile(const std::string &fileName){
-    EdgeMatrix graph;
+Graph InputParser::getGraphFromFile(const std::string &fileName){
+    Graph graph;
     std::vector<std::vector<EdgeWeight>> adjacencyMatrix;
     std::ifstream infile(fileName);
     if (! infile) {
@@ -98,7 +98,7 @@ EdgeMatrix InputParser::getGraphFromFile(const std::string &fileName){
         }
 
     }
-    graph.setE(adjacencyMatrix);
+    graph.setAdjacencyMatrix(adjacencyMatrix);
 
     return graph;
 }

@@ -1,15 +1,15 @@
 #include <iostream>
 
 #include "InputParser.hpp"
-#include "EdgeMatrix.hpp"
+#include "Graph.hpp"
 
 void test(const std::string& fileName) {
-    EdgeMatrix graph = InputParser::getGraphFromFile(fileName);
+    Graph graph = InputParser::getGraphFromFile(fileName);
     std::cout << "No. of nodes: " << graph.getNumOfNodes() << '\n';
     std::cout << "Source: " << graph.getSource() << '\n';
     std::cout << "Destination: " << graph.getDestination() << '\n';
     std::cout << "adjacency matrix:" << std::endl;
-    std::vector<std::vector<EdgeWeight>> matrix = graph.getE();
+    std::vector<std::vector<EdgeWeight>> matrix = graph.getAdjacencyMatrix();
     for (int row = 0; row < matrix.size(); row++) {
         for (int col = 0; col < matrix[row].size(); col++) {
             std::cout << "(";

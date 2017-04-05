@@ -11,11 +11,11 @@
 
 #include <string>
 
-#include "EdgeMatrix.hpp"
+#include "Graph.hpp"
 
 class InputParser{
 public:
-    static EdgeMatrix getGraphFromFile(const std::string &fileName);
+    static Graph getGraphFromFile(const std::string &fileName);
 };
 
 #endif /* InputParser_hpp */
