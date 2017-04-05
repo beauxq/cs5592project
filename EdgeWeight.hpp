@@ -9,17 +9,15 @@
 #ifndef EdgeWeight_hpp
 #define EdgeWeight_hpp
 
-#include <stdio.h>
-
 class EdgeWeight{
 private:
     double mean;
     double variance;
     double c_square;
 public:
-    double getMean();
-    double getVariance();
-    double getC_square();
+    double getMean() const;
+    double getVariance() const;
+    double getC_square() const;
     void setMean(double meanValue);
     void setVariance(double varianceValue);
     void setC_square(double c_squareValue);

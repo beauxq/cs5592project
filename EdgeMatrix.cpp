@@ -10,7 +10,9 @@
 
 #include <vector>
 
-int EdgeMatrix::getSource(){
+#include "EdgeWeight.hpp"
+
+int EdgeMatrix::getSource() const {
     return source;
 }
 
@@ -18,7 +20,7 @@ void EdgeMatrix::setSource(int s){
     source = s;
 }
 
-int EdgeMatrix::getDestination(){
+int EdgeMatrix::getDestination() const {
     return destination;
 }
 
@@ -26,7 +28,7 @@ void EdgeMatrix::setDestination(int d){
     destination = d;
 }
 
-int EdgeMatrix::getNumOfNodes(){
+int EdgeMatrix::getNumOfNodes() const {
     return numOfNodes;
 }
 
@@ -34,10 +36,10 @@ void EdgeMatrix::setNumOfNodes(int n){
     numOfNodes = n;
 }
 
-std::vector<std::vector<EdgeWeight>> EdgeMatrix::getE(){
+const std::vector<std::vector<EdgeWeight>>& EdgeMatrix::getE() const {
     return E;
 }
 
-void EdgeMatrix::setE(std::vector<std::vector<EdgeWeight>> e){
+void EdgeMatrix::setE(const std::vector<std::vector<EdgeWeight>>& e){
     E = e;
 }

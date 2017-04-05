@@ -9,7 +9,6 @@
 #ifndef EdgeMatrix_hpp
 #define EdgeMatrix_hpp
 
-#include <stdio.h>
 #include <vector>
 #include "EdgeWeight.hpp"
 
@@ -20,14 +19,14 @@ private:
     int numOfNodes;
     std::vector<std::vector<EdgeWeight>> E;
 public:
-    int getSource();
+    int getSource() const;
     void setSource(int s);
-    int getDestination();
+    int getDestination() const;
     void setDestination(int d);
-    int getNumOfNodes();
+    int getNumOfNodes() const;
     void setNumOfNodes(int n);
-    std::vector<std::vector<EdgeWeight>> getE();
-    void setE(std::vector<std::vector<EdgeWeight>> e);
+    const std::vector<std::vector<EdgeWeight>>& getE() const;
+    void setE(const std::vector<std::vector<EdgeWeight>>& e);
 };
 
 #endif /* EdgeMatrix_hpp */

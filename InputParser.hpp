@@ -9,15 +9,13 @@
 #ifndef InputParser_hpp
 #define InputParser_hpp
 
-#include <stdio.h>
+#include <string>
+
 #include "EdgeMatrix.hpp"
-#include <sstream>
-#include <fstream>
-#include <math.h>
 
 class InputParser{
 public:
-    EdgeMatrix parser(const std::string& fileName);
+    static EdgeMatrix getGraphFromFile(const std::string &fileName);
 };
 
 #endif /* InputParser_hpp */

@@ -8,7 +8,7 @@
 
 #include "EdgeWeight.hpp"
 
-double EdgeWeight::getMean(){
+double EdgeWeight::getMean() const {
     return mean;
 }
 
@@ -16,7 +16,7 @@ void EdgeWeight::setMean(double meanValue){
     mean = meanValue;
 }
 
-double EdgeWeight::getVariance(){
+double EdgeWeight::getVariance() const {
     return variance;
 }
 
@@ -24,7 +24,7 @@ void EdgeWeight::setVariance(double varianceValue){
     variance = varianceValue;
 }
 
-double EdgeWeight::getC_square(){
+double EdgeWeight::getC_square() const {
     return c_square;
 }
 

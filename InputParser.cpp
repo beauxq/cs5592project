@@ -8,34 +8,43 @@
 
 #include "InputParser.hpp"
 
+#include <stdio.h>
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <fstream>
+#include <math.h>
 
-EdgeMatrix InputParser::parser(const std::string& fileName){
-    EdgeMatrix edge;
-    std::vector<std::vector<EdgeWeight>> e;
+#include "EdgeMatrix.hpp"
+#include "DataInputException.h"
+
+EdgeMatrix InputParser::getGraphFromFile(const std::string &fileName){
+    EdgeMatrix graph;
+    std::vector<std::vector<EdgeWeight>> adjacencyMatrix;
     std::ifstream infile(fileName);
+    if (! infile) {
+        throw DataInputException("unable to open file");
+    }
     while(infile){
         std::vector<std::string> lines;
-        std::string s;
-        if(!getline(infile, s))
+        std::string lineFromFile;
+        if(!getline(infile, lineFromFile))
             break;
-        std::istringstream ss(s);
+        std::istringstream ss(lineFromFile);
         while (ss) {
-            std::string st;
-            if(!getline(ss, st, ','))
+            std::string value;
+            if(!getline(ss, value, ','))
                break;
-            lines.push_back(st);
+            lines.push_back(value);
         }
         if(lines.size() == 3){
-            int size = stoi(lines[0]);
-            edge.setNumOfNodes(size);
-            edge.setSource(stoi(lines[1]));
-            edge.setDestination(stoi(lines[2]));
-            e.resize(size);
-            for (int i = 0; i < size; i++) {
-                e[i].resize(size);
+            size_t numOfNodes = (size_t)stoi(lines[0]);
+            graph.setNumOfNodes(numOfNodes);
+            graph.setSource(stoi(lines[1]));
+            graph.setDestination(stoi(lines[2]));
+            adjacencyMatrix.resize(numOfNodes);
+            for (int i = 0; i < numOfNodes; i++) {
+                adjacencyMatrix[i].resize(numOfNodes);
             }
         } else if(lines.size() == 6){
             EdgeWeight entry;
@@ -75,19 +84,21 @@ EdgeMatrix InputParser::parser(const std::string& fileName){
                     c_square = beta;
                     break;
                 default:
-                    break;
+                    throw DataInputException("edge type is not 1 through 6");
             }
             
             entry.setMean(mean);
             entry.setVariance(variance);
             entry.setC_square(c_square);
-            e[row][col] = entry;
-//            e[col][row] = entry;
+            adjacencyMatrix[row][col] = entry;
+            // adjacencyMatrix[col][row] = entry;  // if we want information in both directions
             
+        } else {
+            throw DataInputException("line has wrong number of values (not 3 or 6)");
         }
 
     }
-    edge.setE(e);
+    graph.setE(adjacencyMatrix);
 
-    return edge;
+    return graph;
 }
