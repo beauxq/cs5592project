@@ -40,8 +40,8 @@ Graph InputParser::getGraphFromFile(const std::string &fileName){
         if(lines.size() == 3){
             size_t numOfNodes = (size_t)stoi(lines[0]);
             graph.setNumOfNodes(numOfNodes);
-            graph.setSource(stoi(lines[1]) - 1);
-            graph.setDestination(stoi(lines[2]) - 1);
+            graph.setSource((size_t)(stoi(lines[1]) - 1));
+            graph.setDestination((size_t)(stoi(lines[2]) - 1));
             adjacencyMatrix.resize(numOfNodes);
             for (int i = 0; i < numOfNodes; i++) {
                 adjacencyMatrix[i].resize(numOfNodes);
@@ -51,6 +51,11 @@ Graph InputParser::getGraphFromFile(const std::string &fileName){
             double mean, variance = 0, c_square = 0;
             int row = stoi(lines[1]) - 1;
             int col = stoi(lines[2]) - 1;
+
+            if (row >= graph.getNumOfNodes() || col >= graph.getNumOfNodes()) {
+                throw DataInputException("invalid node numbers on edges");
+            }
+
             int type = stoi(lines[3]);
             double alpha = stod(lines[4]);
             double beta = stod(lines[5]);
@@ -86,12 +91,18 @@ Graph InputParser::getGraphFromFile(const std::string &fileName){
                 default:
                     throw DataInputException("edge type is not 1 through 6");
             }
-            
+
+            if (adjacencyMatrix[row][col].getEdgePresent()) {
+                throw DataInputException("multiple data sets given for one edge: " +
+                                         std::to_string(row) + " " + std::to_string(col));
+            }
+
+            entry.setEdgePresent(true);
             entry.setMean(mean);
             entry.setVariance(variance);
             entry.setC_square(c_square);
             adjacencyMatrix[row][col] = entry;
-            // adjacencyMatrix[col][row] = entry;  // if we want information in both directions
+            adjacencyMatrix[col][row] = entry;  // information in both directions
             
         } else {
             throw DataInputException("line has wrong number of values (not 3 or 6)");

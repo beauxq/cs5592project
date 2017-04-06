@@ -31,3 +31,13 @@ double EdgeWeight::getC_square() const {
 void EdgeWeight::setC_square(double c_squareValue){
     c_square = c_squareValue;
 }
+
+bool EdgeWeight::getEdgePresent() const {
+    return edgePresent;
+}
+
+void EdgeWeight::setEdgePresent(bool edgePresentValue) {
+    edgePresent = edgePresentValue;
+}
+
+EdgeWeight::EdgeWeight() : edgePresent(false) {}

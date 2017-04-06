@@ -5,6 +5,11 @@
 #include <cstddef>
 #include <limits>
 #include <list>
+#include <queue>
+
+#include "Graph.hpp"
+
+constexpr double Dijkstra::INFINITY = std::numeric_limits<double>::max();
 
 void Dijkstra::makeShortestPathList(const std::vector<size_t> &shortestPathGraph) {
     size_t index = graph.getDestination();
@@ -27,16 +32,26 @@ Dijkstra::Dijkstra(const Graph& _graph) {
 
 void Dijkstra::findPath(int category) {
     // set all distances to infinity
-    std::vector<double> distances(graph.getNumOfNodes(), std::numeric_limits<double>::max());
+    std::vector<double> distances(graph.getNumOfNodes(), INFINITY);
     // set source distance to zero
     distances[graph.getSource()] = 0;
 
+    std::priority_queue<HeapItem> heap;
     std::vector<size_t> shortestPathGraph(graph.getNumOfNodes());  // parent of each node
+    std::vector<bool> visited(graph.getNumOfNodes());  // (color black)
 
     // put source in the heap
-    heap.push(HeapItem(graph.getSource(), distances[graph.getSource()], graph.getSource()));
+    heap.emplace(graph.getSource(), distances[graph.getSource()], graph.getSource());
     while (! heap.empty()) {
-        HeapItem currentNode = heap.top();  // this is the next shortest path
+        HeapItem currentNode;
+        // pull nodes from the heap until finding one that is not visited
+        do {
+            currentNode = heap.top();
+            heap.pop();
+        } while (visited[currentNode.nodeIndex]);
+        // this is the next shortest path
+
+        // now we know this node's parent
         shortestPathGraph[currentNode.nodeIndex] = currentNode.parent;
 
         if (currentNode.nodeIndex == graph.getDestination()) {
@@ -45,10 +60,43 @@ void Dijkstra::findPath(int category) {
             return;
         }
 
-        heap.pop();
+        visited[currentNode.nodeIndex] = true;
 
-        // TODO: update adjacent distances
+        // update adjacent distances
+        for (size_t i = 0; i < graph.getNumOfNodes(); ++i) {
+            if ((! visited[i]) && graph.getAdjacencyMatrix()[currentNode.nodeIndex][i].getEdgePresent()) {
+                // TODO: cost depends on category
+                double cost = graph.getAdjacencyMatrix()[currentNode.nodeIndex][i].getMean();
+
+                if (distances[currentNode.nodeIndex] + cost < distances[i]) {
+                    distances[i] = distances[currentNode.nodeIndex] + cost;
+                    heap.emplace(i, distances[i], currentNode.nodeIndex);
+                }
+            }
+        }
     }
 
+    // if we get here there is no path (graph not connected?)
     shortestPath.clear();
+    shortestDistance = INFINITY;
+}
+
+const std::list<size_t>& Dijkstra::getShortestPath() const {
+    return shortestPath;
+}
+
+double Dijkstra::getShortestDistance() const {
+    return shortestDistance;
+}
+
+std::string Dijkstra::getShortestPathString() const {
+    std::string toReturn;
+    for (auto iter = shortestPath.begin(); iter != shortestPath.end(); ++iter) {
+        toReturn += std::to_string(*iter);
+        if (*iter != graph.getDestination()) {
+            toReturn += ", ";
+        }
+    }
+
+    return toReturn;
 }

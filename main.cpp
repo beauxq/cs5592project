@@ -2,6 +2,7 @@
 
 #include "InputParser.hpp"
 #include "Graph.hpp"
+#include "Dijkstra.h"
 
 void test(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
@@ -19,6 +20,11 @@ void test(const std::string& fileName) {
         }
         std::cout << std::endl;
     }
+
+    Dijkstra algorithm(graph);
+    algorithm.findPath(1);
+    std::cout << algorithm.getShortestPathString() << std::endl;
+    std::cout << algorithm.getShortestDistance() << std::endl;
 }
 
 int main(int argc, const char * argv[]) {
