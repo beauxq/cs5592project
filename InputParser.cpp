@@ -40,8 +40,8 @@ Graph InputParser::getGraphFromFile(const std::string &fileName){
         if(lines.size() == 3){
             size_t numOfNodes = (size_t)stoi(lines[0]);
             graph.setNumOfNodes(numOfNodes);
-            graph.setSource(stoi(lines[1]));
-            graph.setDestination(stoi(lines[2]));
+            graph.setSource(stoi(lines[1]) - 1);
+            graph.setDestination(stoi(lines[2]) - 1);
             adjacencyMatrix.resize(numOfNodes);
             for (int i = 0; i < numOfNodes; i++) {
                 adjacencyMatrix[i].resize(numOfNodes);

@@ -9,30 +9,31 @@
 #include "Graph.hpp"
 
 #include <vector>
+#include <cstddef>
 
 #include "EdgeWeight.hpp"
 
-int Graph::getSource() const {
+size_t Graph::getSource() const {
     return source;
 }
 
-void Graph::setSource(int s){
+void Graph::setSource(size_t s){
     source = s;
 }
 
-int Graph::getDestination() const {
+size_t Graph::getDestination() const {
     return destination;
 }
 
-void Graph::setDestination(int d){
+void Graph::setDestination(size_t d){
     destination = d;
 }
 
-int Graph::getNumOfNodes() const {
+size_t Graph::getNumOfNodes() const {
     return numOfNodes;
 }
 
-void Graph::setNumOfNodes(int n){
+void Graph::setNumOfNodes(size_t n){
     numOfNodes = n;
 }
 

@@ -10,21 +10,23 @@
 #define EdgeMatrix_hpp
 
 #include <vector>
+#include <cstddef>
+
 #include "EdgeWeight.hpp"
 
 class Graph{
 private:
-    int source;
-    int destination;
-    int numOfNodes;
+    size_t source;
+    size_t destination;
+    size_t numOfNodes;
     std::vector<std::vector<EdgeWeight>> adjacencyMatrix;
 public:
-    int getSource() const;
-    void setSource(int s);
-    int getDestination() const;
-    void setDestination(int d);
-    int getNumOfNodes() const;
-    void setNumOfNodes(int n);
+    size_t getSource() const;
+    void setSource(size_t s);
+    size_t getDestination() const;
+    void setDestination(size_t d);
+    size_t getNumOfNodes() const;
+    void setNumOfNodes(size_t n);
     const std::vector<std::vector<EdgeWeight>>& getAdjacencyMatrix() const;
     void setAdjacencyMatrix(const std::vector<std::vector<EdgeWeight>> &e);
 };

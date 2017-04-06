@@ -8,5 +8,7 @@ set(SOURCE_FILES
         InputParser.cpp
         EdgeWeight.cpp
         Graph.cpp
-        DataInputException.h)
+        DataInputException.h
+        HeapItem.h
+        Dijkstra.cpp)
 add_executable(cs5592project ${SOURCE_FILES})
