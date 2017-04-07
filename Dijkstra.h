@@ -13,7 +13,7 @@
 
 class Dijkstra {
 private:
-    static const double INFINITY;
+    static const double infinity;
 
     Graph graph;
     std::list<size_t> shortestPath;  // after it's found, it's stored here

@@ -6,10 +6,11 @@
 #include <limits>
 #include <list>
 #include <queue>
+#include <cmath>
 
 #include "Graph.hpp"
 
-constexpr double Dijkstra::INFINITY = std::numeric_limits<double>::max();
+constexpr double Dijkstra::infinity = std::numeric_limits<double>::max();
 
 void Dijkstra::makeShortestPathList(const std::vector<size_t> &shortestPathGraph) {
     size_t index = graph.getDestination();
@@ -32,7 +33,7 @@ Dijkstra::Dijkstra(const Graph& _graph) {
 
 void Dijkstra::findPath(int category) {
     // set all distances to infinity
-    std::vector<double> distances(graph.getNumOfNodes(), INFINITY);
+    std::vector<double> distances(graph.getNumOfNodes(), infinity);
     // set source distance to zero
     distances[graph.getSource()] = 0;
 
@@ -65,8 +66,28 @@ void Dijkstra::findPath(int category) {
         // update adjacent distances
         for (size_t i = 0; i < graph.getNumOfNodes(); ++i) {
             if ((! visited[i]) && graph.getAdjacencyMatrix()[currentNode.nodeIndex][i].getEdgePresent()) {
-                // TODO: cost depends on category
-                double cost = graph.getAdjacencyMatrix()[currentNode.nodeIndex][i].getMean();
+                // cost depends on category
+                double cost;
+                EdgeWeight edge = graph.getAdjacencyMatrix()[currentNode.nodeIndex][i];
+                switch (category) {
+                    case 1:
+                        cost = edge.getMean();
+                        break;
+                    case 2:
+                        cost = edge.getMean() - sqrt(edge.getVariance());
+                        break;
+                    case 3:
+                        cost = edge.getMean() + sqrt(edge.getVariance());
+                        break;
+                    case 4:
+                        cost = edge.getMean() + 2 * sqrt(edge.getVariance());
+                        break;
+                    case 5:
+                        cost = edge.getC_square();
+                        break;
+                    default:
+                        throw 1;  // TODO: make exception
+                }
 
                 if (distances[currentNode.nodeIndex] + cost < distances[i]) {
                     distances[i] = distances[currentNode.nodeIndex] + cost;
@@ -78,7 +99,7 @@ void Dijkstra::findPath(int category) {
 
     // if we get here there is no path (graph not connected?)
     shortestPath.clear();
-    shortestDistance = INFINITY;
+    shortestDistance = infinity;
 }
 
 const std::list<size_t>& Dijkstra::getShortestPath() const {
