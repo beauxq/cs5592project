@@ -3,6 +3,12 @@
 #include "InputParser.hpp"
 #include "Graph.hpp"
 #include "Dijkstra.h"
+#include "image/ImageData.h"
+
+void testImage() {
+    ImageData img(200, 100);
+    img.writeFile("white200x100");
+}
 
 void test(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
@@ -30,6 +36,8 @@ void test(const std::string& fileName) {
 int main(int argc, const char * argv[]) {
     test("input/CS5592SP17StochasticShortestPath3.txt");
     test("input/CS5592SP17StochasticShortestPath4.txt");
+
+    testImage();
 
     return 0;
 }

@@ -10,5 +10,5 @@ set(SOURCE_FILES
         Graph.cpp
         DataInputException.h
         HeapItem.h
-        Dijkstra.cpp)
+        Dijkstra.cpp image/Pixel.h image/ImageData.cpp image/ImageData.h)
 add_executable(cs5592project ${SOURCE_FILES})
