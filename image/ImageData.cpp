@@ -5,13 +5,10 @@
 #include "ImageData.h"
 
 #include <iostream>
+#include <windows.h>
 #include <cstring>
 #include <fstream>
 #include <algorithm>
-// #include <windows.h>  // replaced with copies of specific libraries copied from mingw
-
-#include "windef.h"
-#include "wingdi.h"
 
 /**
  *  this function from
