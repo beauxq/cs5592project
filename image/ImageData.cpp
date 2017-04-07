@@ -72,7 +72,7 @@ void ImageData::writeFile(std::string fileName) {
 
     for(auto pixelRowI = pixels.begin(); pixelRowI != pixels.end(); ++pixelRowI) {
         for (auto pixelI = pixelRowI->begin(); pixelI != pixelRowI->end(); ++ pixelI) {
-            ofs << pixelI->r << pixelI->g << pixelI->b;
+            ofs << pixelI->b << pixelI->g << pixelI->r;
         }
     }
 }

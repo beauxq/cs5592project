@@ -19,8 +19,9 @@ void testGraphImage(const std::string& fileName) {
     std::cout << algorithm.getShortestPathString() << std::endl;
     std::cout << algorithm.getShortestDistance() << std::endl;
 
-    GraphVisualizer gv(graph);
-    gv.createImage(fileName);
+    GraphVisualizer gv(graph, algorithm.getShortestPath());
+    gv.createImage(fileName, false);
+    gv.createImage(fileName + ".path", true);
 }
 
 void test(const std::string& fileName) {
@@ -49,8 +50,11 @@ void test(const std::string& fileName) {
 int main(int argc, const char * argv[]) {
     test("input/CS5592SP17StochasticShortestPath3.txt");
     test("input/CS5592SP17StochasticShortestPath4.txt");
+    test("input/SmallTest1.txt");
 
     testGraphImage("input/CS5592SP17StochasticShortestPath3.txt");
+    testGraphImage("input/CS5592SP17StochasticShortestPath4.txt");
+    testGraphImage("input/SmallTest1.txt");
 
     return 0;
 }

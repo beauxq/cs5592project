@@ -7,6 +7,7 @@
 
 #include <cstddef>
 #include <vector>
+#include <list>
 
 #include "image/ImageData.h"
 #include "Graph.hpp"
@@ -19,12 +20,25 @@ private:
 
     ImageData image;
     Graph* graph;
+    std::list<size_t> shortestPath;
+
+    // for scaling color of edges
+    double minEdgeValue;
+    double maxEdgeValue;
+    double difference;
 
     std::vector<Coordinate> getNodeCoordinates();
-public:
-    GraphVisualizer(Graph& _graph);
 
-    void createImage(const std::string& fileName);
+    void drawLine(const Coordinate& from, const Coordinate& to, uint8_t varyingColor, bool pathColor);
+
+    /** find min and max values */
+    void scaleColor();
+    /** get color based off min and max values */
+    uint8_t scaleColor(size_t edgeNodeA, size_t edgeNodeB);
+public:
+    GraphVisualizer(Graph& _graph, const std::list<size_t>& _shortestPath);
+
+    void createImage(const std::string& fileName, bool showShortest);
 };
 
 

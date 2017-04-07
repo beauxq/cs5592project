@@ -21,16 +21,16 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     int numOfNodesOnEachArc = ((graph->getNumOfNodes()) - 1) / 2;
     bool needSingleNodeOnOtherEnd = graph->getNumOfNodes() == 2 + (2 * numOfNodesOnEachArc);
 
-    // find perpendicular bisector to left and mid-top
+    // find perpendicular bisector to left and mid-bottom
     Coordinate leftMid(WIDTH * .25, (HEIGHT * .5 + topBottomMargin) / 2.0);
     double slope = -1.0 / ((topBottomMargin - HEIGHT * .5) / (WIDTH * .5));
     // y = slope * x + b
     // b = y - slope * x
 
-    Coordinate lowerCircleCenter(WIDTH * .5, slope * WIDTH * .5 + (leftMid.y - slope * leftMid.x));
-    Coordinate upperCircleCenter(WIDTH * .5, HEIGHT * .5 - (lowerCircleCenter.y - HEIGHT * .5));
+    Coordinate upperCircleCenter(WIDTH * .5, slope * WIDTH * .5 + (leftMid.y - slope * leftMid.x));
+    Coordinate lowerCircleCenter(WIDTH * .5, HEIGHT * .5 - (upperCircleCenter.y - HEIGHT * .5));
 
-    double circleRadius = sqrt(pow(WIDTH * .5, 2) + pow(lowerCircleCenter.y - HEIGHT * .5, 2));
+    double circleRadius = sqrt(pow(WIDTH * .5, 2) + pow(upperCircleCenter.y - HEIGHT * .5, 2));
 
     double totalAngle = 2 * asin(WIDTH * .5 / circleRadius);
 
@@ -39,19 +39,19 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     // polar coordinates, angle 0 is east
     double currentAngle = .5 * pi + (totalAngle * .5);
 
-    Coordinate currentBottomNode;
     Coordinate currentTopNode;
+    Coordinate currentBottomNode;
 
     for (int i = numOfNodesOnEachArc; i > 0; --i) {
         currentAngle -= angleForEachNode;
 
         // convert polar coordinates to cartesian
-        currentBottomNode.x = upperCircleCenter.x + circleRadius * cos(currentAngle);
-        currentBottomNode.y = upperCircleCenter.y + circleRadius * sin(currentAngle);
+        currentTopNode.x = lowerCircleCenter.x + circleRadius * cos(currentAngle);
+        currentTopNode.y = lowerCircleCenter.y + circleRadius * sin(currentAngle);
 
         // top arc is symmetric to bottom
-        currentTopNode.x = currentBottomNode.x;
-        currentTopNode.y = HEIGHT * .5 - (currentBottomNode.y - HEIGHT * .5);
+        currentBottomNode.x = currentTopNode.x;
+        currentBottomNode.y = HEIGHT * .5 - (currentTopNode.y - HEIGHT * .5);
 
         toReturn.push_back(currentTopNode);
         toReturn.push_back(currentBottomNode);
@@ -63,18 +63,121 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     return toReturn;
 }
 
-GraphVisualizer::GraphVisualizer(Graph& _graph) : image(WIDTH, HEIGHT) {
-    graph = &_graph;
+void GraphVisualizer::drawLine(const Coordinate& from, const Coordinate& to, uint8_t varyingColor, bool pathColor) {
+    double slope;
+
+    if (to.x == from.x)  // don't divide by zero
+        slope = 9999999999;
+    else if (to.y == from.y)  // don't make slope 0 (because we need to divide by it later)
+        slope = 0.000000001;
+    else
+        slope = (to.y - from.y) / (to.x - from.x);
+
+    double b = from.y - slope * from.x;
+
+    // function of x is y = slope * x + b
+    // function of y is x = (y - b) / slope
+
+    size_t x;
+    size_t y;
+
+    for (x = (size_t)round(from.x); x != (size_t)round(to.x); ) {
+        y = (size_t)round(slope * x + b);
+
+        image.get(x, y).r = varyingColor;
+        image.get(x, y).g = (unsigned char)255 - varyingColor;
+        if (! pathColor)
+            image.get(x, y).b = 0;
+        else
+            image.get(x, y).b = 255;
+
+        if (to.x > from.x)
+            ++x;
+        else
+            --x;
+    }
+
+    for (y = (size_t)round(from.y); y != (size_t)round(to.y); ) {
+        x = (size_t)round((y - b) / slope);
+
+        image.get(x, y).r = varyingColor;
+        image.get(x, y).g = (unsigned char)255 - varyingColor;
+        if (! pathColor)
+            image.get(x, y).b = 0;
+        else
+            image.get(x, y).b = 255;
+
+        if (to.y > from.y)
+            ++y;
+        else
+            --y;
+    }
 }
 
-void GraphVisualizer::createImage(const std::string &fileName) {
-    ImageData image2(WIDTH, HEIGHT);
+void GraphVisualizer::scaleColor() {
+    minEdgeValue = INFINITY;
+    maxEdgeValue = 0;
 
+    for (auto matrixRowI = graph->getAdjacencyMatrix().begin();
+         matrixRowI != graph->getAdjacencyMatrix().end();
+         ++ matrixRowI)
+    {
+        for (auto edgeI = matrixRowI->begin(); edgeI != matrixRowI->end(); ++edgeI) {
+            if (edgeI->getEdgePresent()) {
+                if (edgeI->getMean() < minEdgeValue)
+                    minEdgeValue = edgeI->getMean();
+                if (edgeI->getMean() > maxEdgeValue)
+                    maxEdgeValue = edgeI->getMean();
+            }
+        }
+    }
+
+    difference = maxEdgeValue - minEdgeValue;
+}
+
+uint8_t GraphVisualizer::scaleColor(size_t edgeNodeA, size_t edgeNodeB) {
+    double mean = graph->getAdjacencyMatrix()[edgeNodeA][edgeNodeB].getMean();
+    return (uint8_t)((mean - minEdgeValue) / difference * 255);
+}
+
+GraphVisualizer::GraphVisualizer(Graph& _graph, const std::list<size_t>& _shortestPath) : image(WIDTH, HEIGHT) {
+    graph = &_graph;
+    shortestPath = _shortestPath;
+}
+
+void GraphVisualizer::createImage(const std::string &fileName, bool showShortest=false) {
     auto nodeCoordinates = getNodeCoordinates();
+    scaleColor();
 
     // draw edges
-    for (auto matrixRowI = graph->getAdjacencyMatrix().begin(); matrixRowI != graph->getAdjacencyMatrix().end(); ++matrixRowI) {
-        
+    for (size_t matrixRow = 0; matrixRow < graph->getNumOfNodes(); ++matrixRow) {
+        for (size_t matrixCol = matrixRow + 1; matrixCol < graph->getNumOfNodes(); ++matrixCol) {
+            if (graph->getAdjacencyMatrix()[matrixRow][matrixCol].getEdgePresent()) {
+                drawLine(nodeCoordinates[matrixRow],
+                         nodeCoordinates[matrixCol],
+                         scaleColor(matrixRow, matrixCol),
+                         false);
+
+            }
+        }
+    }
+
+    // draw shortest path
+    if (showShortest && (! shortestPath.empty())) {
+        // TODO: show shortest path
+        auto nodeI = shortestPath.begin();
+        size_t previousNode = *nodeI;
+        ++nodeI;
+
+        while (nodeI != shortestPath.end()) {
+            drawLine(nodeCoordinates[previousNode],
+                     nodeCoordinates[*nodeI],
+                     127,
+                     true);
+
+            previousNode = *nodeI;
+            ++nodeI;
+        }
     }
 
     // draw nodes
@@ -82,22 +185,22 @@ void GraphVisualizer::createImage(const std::string &fileName) {
         size_t x = (size_t)round(nodeI->x);
         size_t y = (size_t)round(nodeI->y);
 
-        image2.get(x, y).r = 0;
-        image2.get(x, y).g = 0;
-        image2.get(x, y).b = 0;
-        image2.get(x + 1, y).r = 0;
-        image2.get(x + 1, y).g = 0;
-        image2.get(x + 1, y).b = 0;
-        image2.get(x, y + 1).r = 0;
-        image2.get(x, y + 1).g = 0;
-        image2.get(x, y + 1).b = 0;
-        image2.get(x - 1, y).r = 0;
-        image2.get(x - 1, y).g = 0;
-        image2.get(x - 1, y).b = 0;
-        image2.get(x, y - 1).r = 0;
-        image2.get(x, y - 1).g = 0;
-        image2.get(x, y - 1).b = 0;
+        image.get(x, y).r = 0;
+        image.get(x, y).g = 0;
+        image.get(x, y).b = 0;
+        image.get(x + 1, y).r = 0;
+        image.get(x + 1, y).g = 0;
+        image.get(x + 1, y).b = 0;
+        image.get(x, y + 1).r = 0;
+        image.get(x, y + 1).g = 0;
+        image.get(x, y + 1).b = 0;
+        image.get(x - 1, y).r = 0;
+        image.get(x - 1, y).g = 0;
+        image.get(x - 1, y).b = 0;
+        image.get(x, y - 1).r = 0;
+        image.get(x, y - 1).g = 0;
+        image.get(x, y - 1).b = 0;
     }
 
-    image2.writeFile(fileName);
+    image.writeFile(fileName);
 }
