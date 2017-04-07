@@ -39,7 +39,7 @@
  * preferred technique of deriving these from a user assigned, (or
  * default), NTDDI_VERSION setting.
  */
-#include <w32api.h>
+#include "w32api.h"
 
 _BEGIN_C_DECLS
 
@@ -266,7 +266,7 @@ typedef CONST void *PCVOID,*LPCVOID;
 typedef int INT;
 typedef unsigned int UINT,*PUINT,*LPUINT;
 
-#include <winnt.h>
+#include "winnt.h"
 
 typedef UINT_PTR WPARAM;
 typedef LONG_PTR LPARAM;
