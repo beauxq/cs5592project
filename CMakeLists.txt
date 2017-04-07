@@ -10,5 +10,8 @@ set(SOURCE_FILES
         Graph.cpp
         DataInputException.h
         HeapItem.h
-        Dijkstra.cpp image/Pixel.h image/ImageData.cpp image/ImageData.h)
+        Dijkstra.cpp
+        image/Pixel.h
+        image/ImageData.cpp
+        GraphVisualizer.cpp image/Coordinate.h)
 add_executable(cs5592project ${SOURCE_FILES})

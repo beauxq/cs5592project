@@ -4,10 +4,23 @@
 #include "Graph.hpp"
 #include "Dijkstra.h"
 #include "image/ImageData.h"
+#include "GraphVisualizer.h"
 
 void testImage() {
     ImageData img(200, 100);
     img.writeFile("white200x100");
+}
+
+void testGraphImage(const std::string& fileName) {
+    Graph graph = InputParser::getGraphFromFile(fileName);
+
+    Dijkstra algorithm(graph);
+    algorithm.findPath(1);
+    std::cout << algorithm.getShortestPathString() << std::endl;
+    std::cout << algorithm.getShortestDistance() << std::endl;
+
+    GraphVisualizer gv(graph);
+    gv.createImage(fileName);
 }
 
 void test(const std::string& fileName) {
@@ -37,7 +50,7 @@ int main(int argc, const char * argv[]) {
     test("input/CS5592SP17StochasticShortestPath3.txt");
     test("input/CS5592SP17StochasticShortestPath4.txt");
 
-    testImage();
+    testGraphImage("input/CS5592SP17StochasticShortestPath3.txt");
 
     return 0;
 }
