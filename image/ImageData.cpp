@@ -1,6 +1,6 @@
-//
-// Created by Doug on 4/7/2017.
-//
+// implementation fo ImageData class
+
+#ifdef _WIN32
 
 #include "ImageData.h"
 
@@ -76,3 +76,5 @@ void ImageData::writeFile(std::string fileName) {
         }
     }
 }
+
+#endif
