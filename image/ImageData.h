@@ -15,7 +15,10 @@ private:
     size_t width;
     size_t height;
 
-    static void writeHeader(std::ostream &out, size_t width, size_t height);
+#ifdef _WIN32
+    static void writeHeaderBMP(std::ostream &out, size_t width, size_t height);
+#endif
+    static void writeHeaderPPM(std::ostream &out, size_t width, size_t height);
 
     static bool endsWith(const std::string& value, const std::string& ending);
 
@@ -25,8 +28,12 @@ public:
     /** get a reference to one pixel */
     Pixel& get(size_t xLocation, size_t yLocation);
 
+#ifdef _WIN32
     /** write bitmap file */
-    void writeFile(std::string fileName);
+    void writeFileBMP(std::string fileName);
+#endif
+    /** write PPM file */
+    void writeFilePPM(std::string fileName);
 };
 
 

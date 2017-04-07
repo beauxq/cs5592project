@@ -1,7 +1,5 @@
 // implementation of GraphVisualizer class
 
-#ifdef _WIN32
-
 #include "GraphVisualizer.h"
 
 #include <cmath>
@@ -18,7 +16,7 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     // node 0, probably usually the source
     toReturn.emplace_back(10, HEIGHT * .5);
 
-    int numOfNodesOnEachArc = ((graph->getNumOfNodes()) - 1) / 2;
+    size_t numOfNodesOnEachArc = ((graph->getNumOfNodes()) - 1) / 2;
     bool needSingleNodeOnOtherEnd = graph->getNumOfNodes() == 2 + (2 * numOfNodesOnEachArc);
 
     // find perpendicular bisector to left and mid-bottom
@@ -42,7 +40,7 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     Coordinate currentTopNode;
     Coordinate currentBottomNode;
 
-    for (int i = numOfNodesOnEachArc; i > 0; --i) {
+    for (int i = (int)numOfNodesOnEachArc; i > 0; --i) {
         currentAngle -= angleForEachNode;
 
         // convert polar coordinates to cartesian
@@ -202,7 +200,5 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
         image.get(x, y - 1).b = 0;
     }
 
-    image.writeFile(fileName);
+    image.writeFilePPM(fileName);
 }
-
-#endif

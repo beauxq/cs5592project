@@ -5,18 +5,13 @@
 #include "Dijkstra.h"
 #include "image/ImageData.h"
 
-#ifdef _WIN32
 #include "GraphVisualizer.h"
-#endif
 
-#ifdef _WIN32
 void testImage() {
     ImageData img(200, 100);
-    img.writeFile("white200x100");
+    img.writeFilePPM("white200x100");
 }
-#endif
 
-#ifdef _WIN32
 void testGraphImage(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
 
@@ -29,7 +24,6 @@ void testGraphImage(const std::string& fileName) {
     gv.createImage(fileName, false);
     gv.createImage(fileName + ".path", true);
 }
-#endif
 
 void test(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
@@ -59,11 +53,9 @@ int main(int argc, const char * argv[]) {
     test("input/CS5592SP17StochasticShortestPath4.txt");
     test("input/SmallTest1.txt");
 
-#ifdef _WIN32
     testGraphImage("input/CS5592SP17StochasticShortestPath3.txt");
     testGraphImage("input/CS5592SP17StochasticShortestPath4.txt");
     testGraphImage("input/SmallTest1.txt");
-#endif
 
     return 0;
 }
