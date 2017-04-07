@@ -1,6 +1,6 @@
-//
-// Created by Doug on 4/7/2017.
-//
+// implementation of GraphVisualizer class
+
+#ifdef _WIN32
 
 #include "GraphVisualizer.h"
 
@@ -204,3 +204,5 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
 
     image.writeFile(fileName);
 }
+
+#endif

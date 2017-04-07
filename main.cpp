@@ -9,10 +9,12 @@
 #include "GraphVisualizer.h"
 #endif
 
+#ifdef _WIN32
 void testImage() {
     ImageData img(200, 100);
     img.writeFile("white200x100");
 }
+#endif
 
 #ifdef _WIN32
 void testGraphImage(const std::string& fileName) {
