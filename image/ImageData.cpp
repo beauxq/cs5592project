@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 #include <algorithm>
+#include <cmath>
 
 #ifdef _WIN32
 /**
