@@ -31,6 +31,8 @@ private:
 
     void drawLine(const Coordinate& from, const Coordinate& to, uint8_t varyingColor, bool pathColor);
 
+    void drawNode(size_t x, size_t y);
+
     /** find min and max values */
     void scaleColor();
     /** get color based off min and max values */

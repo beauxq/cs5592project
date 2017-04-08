@@ -79,15 +79,20 @@ void GraphVisualizer::drawLine(const Coordinate& from, const Coordinate& to, uin
     size_t x;
     size_t y;
 
+    Pixel color(varyingColor,  //(unsigned char)(127 * varyingColor / 2),
+                (unsigned char)(127 + (255 - varyingColor) / 2),
+                (unsigned char)(pathColor ? 255 : 0));
+
     for (x = (size_t)round(from.x); x != (size_t)round(to.x); ) {
         y = (size_t)round(slope * x + b);
 
-        image.get(x, y).r = varyingColor;
-        image.get(x, y).g = (unsigned char)255 - varyingColor;
-        if (! pathColor)
-            image.get(x, y).b = 0;
-        else
-            image.get(x, y).b = 255;
+        image.get(x, y) = color;
+        image.get(x, y + 1) = color;
+        image.get(x, y - 1) = color;
+        if (pathColor) {
+            image.get(x, y + 2) = color;
+            image.get(x, y - 2) = color;
+        }
 
         if (to.x > from.x)
             ++x;
@@ -98,12 +103,13 @@ void GraphVisualizer::drawLine(const Coordinate& from, const Coordinate& to, uin
     for (y = (size_t)round(from.y); y != (size_t)round(to.y); ) {
         x = (size_t)round((y - b) / slope);
 
-        image.get(x, y).r = varyingColor;
-        image.get(x, y).g = (unsigned char)255 - varyingColor;
-        if (! pathColor)
-            image.get(x, y).b = 0;
-        else
-            image.get(x, y).b = 255;
+        image.get(x, y) = color;
+        image.get(x + 1, y) = color;
+        image.get(x - 1, y) = color;
+        if (pathColor) {
+            image.get(x + 2, y) = color;
+            image.get(x - 2, y) = color;
+        }
 
         if (to.y > from.y)
             ++y;
@@ -111,6 +117,21 @@ void GraphVisualizer::drawLine(const Coordinate& from, const Coordinate& to, uin
             --y;
     }
 }
+
+
+void GraphVisualizer::drawNode(size_t x, size_t y) {
+    Pixel black(0, 0, 0);
+
+    for (size_t xi = x - 3; xi < x + 4; ++xi) {
+        for (size_t yi = y - 3; yi < y + 4; ++yi) {
+            image.get(xi, yi) = black;
+        }
+    }
+
+    // middle back to white
+    image.get(x, y) = Pixel();
+}
+
 
 void GraphVisualizer::scaleColor() {
     minEdgeValue = INFINITY;
@@ -162,7 +183,6 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
 
     // draw shortest path
     if (showShortest && (! shortestPath.empty())) {
-        // TODO: show shortest path
         auto nodeI = shortestPath.begin();
         size_t previousNode = *nodeI;
         ++nodeI;
@@ -183,22 +203,11 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
         size_t x = (size_t)round(nodeI->x);
         size_t y = (size_t)round(nodeI->y);
 
-        image.get(x, y).r = 0;
-        image.get(x, y).g = 0;
-        image.get(x, y).b = 0;
-        image.get(x + 1, y).r = 0;
-        image.get(x + 1, y).g = 0;
-        image.get(x + 1, y).b = 0;
-        image.get(x, y + 1).r = 0;
-        image.get(x, y + 1).g = 0;
-        image.get(x, y + 1).b = 0;
-        image.get(x - 1, y).r = 0;
-        image.get(x - 1, y).g = 0;
-        image.get(x - 1, y).b = 0;
-        image.get(x, y - 1).r = 0;
-        image.get(x, y - 1).g = 0;
-        image.get(x, y - 1).b = 0;
+        drawNode(x, y);
     }
-
+#ifdef _WIN32
+    image.writeFileBMP(fileName);
+#else
     image.writeFilePPM(fileName);
+#endif
 }
