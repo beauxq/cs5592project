@@ -8,6 +8,7 @@
 #include <string>
 
 #include "Pixel.h"
+#include "Coordinate.h"
 
 class ImageData {
 private:
@@ -27,6 +28,8 @@ public:
 
     /** get a reference to one pixel */
     Pixel& get(size_t xLocation, size_t yLocation);
+
+    void drawLine(const Coordinate& from, const Coordinate& to, const Pixel& color, int thickness);
 
 #ifdef _WIN32
     /** write bitmap file */

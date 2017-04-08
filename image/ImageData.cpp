@@ -68,6 +68,52 @@ Pixel& ImageData::get(size_t xLocation, size_t yLocation) {
     return pixels[yLocation][xLocation];
 }
 
+void ImageData::drawLine(const Coordinate& from, const Coordinate& to, const Pixel& color, int thickness) {
+    double slope;
+
+    // TODO: real horizontal and vertical line handling
+    if (to.x == from.x)  // don't divide by zero
+        slope = 9999999999;
+    else if (to.y == from.y)  // don't make slope 0 (because we need to divide by it later)
+        slope = 0.000000001;
+    else
+        slope = (to.y - from.y) / (to.x - from.x);
+
+    double b = from.y - slope * from.x;
+
+    // function of x is y = slope * x + b
+    // function of y is x = (y - b) / slope
+
+    size_t x;
+    size_t y;
+
+    for (x = (size_t)round(from.x); x != (size_t)round(to.x); ) {
+        y = (size_t)round(slope * x + b);
+
+        for (int yi = std::max((int)y - thickness, 0); yi < std::min((int)y + thickness + 1, (int)height); ++yi) {
+            pixels[yi][x] = color;
+        }
+
+        if (to.x > from.x)
+            ++x;
+        else
+            --x;
+    }
+
+    for (y = (size_t)round(from.y); y != (size_t)round(to.y); ) {
+        x = (size_t)round((y - b) / slope);
+
+        for (int xi = std::max((int)x - thickness, 0); xi < std::min((int)x + thickness + 1, (int)width); ++xi) {
+            pixels[y][xi] = color;
+        }
+
+        if (to.y > from.y)
+            ++y;
+        else
+            --y;
+    }
+}
+
 #ifdef _WIN32
 void ImageData::writeFileBMP(std::string fileName) {
     if (! endsWith(fileName, ".bmp"))

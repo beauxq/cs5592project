@@ -29,7 +29,7 @@ private:
 
     std::vector<Coordinate> getNodeCoordinates();
 
-    void drawLine(const Coordinate& from, const Coordinate& to, uint8_t varyingColor, bool pathColor);
+    void drawEdge(const Coordinate &from, const Coordinate &to, uint8_t varyingColor, bool pathColor);
 
     void drawNode(size_t x, size_t y);
 

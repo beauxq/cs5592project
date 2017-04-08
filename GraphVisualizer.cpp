@@ -61,61 +61,12 @@ std::vector<Coordinate> GraphVisualizer::getNodeCoordinates() {
     return toReturn;
 }
 
-void GraphVisualizer::drawLine(const Coordinate& from, const Coordinate& to, uint8_t varyingColor, bool pathColor) {
-    double slope;
-
-    if (to.x == from.x)  // don't divide by zero
-        slope = 9999999999;
-    else if (to.y == from.y)  // don't make slope 0 (because we need to divide by it later)
-        slope = 0.000000001;
-    else
-        slope = (to.y - from.y) / (to.x - from.x);
-
-    double b = from.y - slope * from.x;
-
-    // function of x is y = slope * x + b
-    // function of y is x = (y - b) / slope
-
-    size_t x;
-    size_t y;
-
+void GraphVisualizer::drawEdge(const Coordinate &from, const Coordinate &to, uint8_t varyingColor, bool pathColor) {
     Pixel color(varyingColor,  //(unsigned char)(127 * varyingColor / 2),
                 (unsigned char)(127 + (255 - varyingColor) / 2),
                 (unsigned char)(pathColor ? 255 : 0));
 
-    for (x = (size_t)round(from.x); x != (size_t)round(to.x); ) {
-        y = (size_t)round(slope * x + b);
-
-        image.get(x, y) = color;
-        image.get(x, y + 1) = color;
-        image.get(x, y - 1) = color;
-        if (pathColor) {
-            image.get(x, y + 2) = color;
-            image.get(x, y - 2) = color;
-        }
-
-        if (to.x > from.x)
-            ++x;
-        else
-            --x;
-    }
-
-    for (y = (size_t)round(from.y); y != (size_t)round(to.y); ) {
-        x = (size_t)round((y - b) / slope);
-
-        image.get(x, y) = color;
-        image.get(x + 1, y) = color;
-        image.get(x - 1, y) = color;
-        if (pathColor) {
-            image.get(x + 2, y) = color;
-            image.get(x - 2, y) = color;
-        }
-
-        if (to.y > from.y)
-            ++y;
-        else
-            --y;
-    }
+    image.drawLine(from, to, color, pathColor ? 2 : 1);
 }
 
 
@@ -172,7 +123,7 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
     for (size_t matrixRow = 0; matrixRow < graph->getNumOfNodes(); ++matrixRow) {
         for (size_t matrixCol = matrixRow + 1; matrixCol < graph->getNumOfNodes(); ++matrixCol) {
             if (graph->getAdjacencyMatrix()[matrixRow][matrixCol].getEdgePresent()) {
-                drawLine(nodeCoordinates[matrixRow],
+                drawEdge(nodeCoordinates[matrixRow],
                          nodeCoordinates[matrixCol],
                          scaleColor(matrixRow, matrixCol),
                          false);
@@ -188,7 +139,7 @@ void GraphVisualizer::createImage(const std::string &fileName, bool showShortest
         ++nodeI;
 
         while (nodeI != shortestPath.end()) {
-            drawLine(nodeCoordinates[previousNode],
+            drawEdge(nodeCoordinates[previousNode],
                      nodeCoordinates[*nodeI],
                      127,
                      true);
