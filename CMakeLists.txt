@@ -13,5 +13,7 @@ set(SOURCE_FILES
         Dijkstra.cpp
         image/Pixel.h
         image/ImageData.cpp
-        GraphVisualizer.cpp image/Coordinate.h)
+        GraphVisualizer.cpp
+        image/Coordinate.h
+        PerformanceMeasures.cpp)
 add_executable(cs5592project ${SOURCE_FILES})

@@ -1,13 +1,13 @@
 //
-//  PerformaceMeasures.hpp
+//  PerformanceMeasures.hpp
 //  Dijkstra's shortest uncertain path algorithm
 //
 //  Created by Ting Xia on 4/7/17.
 //  Copyright © 2017 Ting. All rights reserved.
 //
 
-#ifndef PerformaceMeasures_hpp
-#define PerformaceMeasures_hpp
+#ifndef PerformanceMeasures_hpp
+#define PerformanceMeasures_hpp
 
 #include <stdio.h>
 #include "Graph.hpp"
@@ -21,7 +21,7 @@
 #include <iomanip>
 #include <sstream>
 
-class PerformaceMeasures{
+class PerformanceMeasures{
 public:
     void ComparePathsAndCheckEdge(Graph graph);
     std::string center(const std::string s, const int w);

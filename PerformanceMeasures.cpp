@@ -1,14 +1,14 @@
 //
-//  PerformaceMeasures.cpp
+//  PerformanceMeasures.cpp
 //  Dijkstra's shortest uncertain path algorithm
 //
 //  Created by Ting Xia on 4/7/17.
 //  Copyright © 2017 Ting. All rights reserved.
 //
 
-#include "PerformaceMeasures.hpp"
+#include "PerformanceMeasures.hpp"
 
-void PerformaceMeasures::ComparePathsAndCheckEdge(Graph graph){
+void PerformanceMeasures::ComparePathsAndCheckEdge(Graph graph){
     Dijkstra algorithm(graph);
     
     std::vector<std::pair<std::string, double>> meanValue, optimist, pessimist, doublyPess, stable;
@@ -224,7 +224,7 @@ void PerformaceMeasures::ComparePathsAndCheckEdge(Graph graph){
     }
 }
 
-std::string PerformaceMeasures::center(const std::string s, const int w){
+std::string PerformanceMeasures::center(const std::string s, const int w){
     std::stringstream ss, spaces;
     int padding = w - s.size();                 // count excess room to pad
     for(int i=0; i<padding/2; ++i)

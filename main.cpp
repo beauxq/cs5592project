@@ -4,20 +4,21 @@
 #include "Graph.hpp"
 #include "Dijkstra.h"
 #include "image/ImageData.h"
-#include "PerformaceMeasures.hpp"
+#include "PerformanceMeasures.hpp"
 
-#ifdef _WIN32
 #include "GraphVisualizer.h"
-#endif
 
-#ifdef _WIN32
+const std::vector<std::string> allInputs = {
+        "input/CS5592SP17StochasticShortestPath3.txt",
+        "input/CS5592SP17StochasticShortestPath4.txt",
+        "input/SmallTest1.txt"
+};
+
 void testImage() {
     ImageData img(200, 100);
     img.writeFilePPM("white200x100");
 }
-#endif
 
-#ifdef _WIN32
 void testGraphImage(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
 
@@ -30,10 +31,10 @@ void testGraphImage(const std::string& fileName) {
     gv.createImage(fileName, false);
     gv.createImage(fileName + ".path", true);
 }
-#endif
 
-void test(const std::string& fileName) {
+void testParser(const std::string& fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
+
     std::cout << "No. of nodes: " << graph.getNumOfNodes() << '\n';
     std::cout << "Source: " << graph.getSource() << '\n';
     std::cout << "Destination: " << graph.getDestination() << '\n';
@@ -48,26 +49,34 @@ void test(const std::string& fileName) {
         }
         std::cout << std::endl;
     }
+}
 
-//    Dijkstra algorithm(graph);
-    PerformaceMeasures performance;
+void testAlgorithm(const std::string& fileName) {
+    Graph graph = InputParser::getGraphFromFile(fileName);
+
+    Dijkstra algorithm(graph);
+    algorithm.findPath(1);
+    std::cout << algorithm.getShortestPathString() << std::endl;
+    std::cout << algorithm.getShortestDistance() << std::endl;
+}
+
+void testPerformanceMeasures(const std::string fileName) {
+    Graph graph = InputParser::getGraphFromFile(fileName);
+
+    PerformanceMeasures performance;
     performance.ComparePathsAndCheckEdge(graph);
-    
-    
-//    std::cout << algorithm.getShortestPathString() << std::endl;
-//    std::cout << algorithm.getShortestDistance() << std::endl;
 }
 
 int main(int argc, const char * argv[]) {
-    test("input/CS5592SP17StochasticShortestPath3.txt");
-    test("input/CS5592SP17StochasticShortestPath4.txt");
-    test("input/SmallTest1.txt");
+    for (auto inputFileName : allInputs) {
+        // testParser(inputFileName);
 
-#ifdef _WIN32
-    testGraphImage("input/CS5592SP17StochasticShortestPath3.txt");
-    testGraphImage("input/CS5592SP17StochasticShortestPath4.txt");
-    testGraphImage("input/SmallTest1.txt");
-#endif
+        // testAlgorithm(inputFileName);
+
+        testPerformanceMeasures(inputFileName);
+
+        testGraphImage(inputFileName);
+    }
 
     return 0;
 }
