@@ -15,12 +15,10 @@ void PerformanceMeasures::processCategory(Table& outputTable,
                                           std::unordered_map<std::string, std::vector<std::string>>& edgeMap,
                                           std::unordered_map<std::string, std::vector<bool>>& edgeSelMap)
 {
-#ifdef _WIN32
-    // unicode buggy in windows
     const std::string rightArrow = "->";
-#else  // not windows
+/*  // unicode is buggy
     const std::string rightArrow = "→";
-#endif
+*/
 
     double tableData[CATEGORIES.size()];
     // initialize to zero

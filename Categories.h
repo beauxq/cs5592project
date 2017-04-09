@@ -25,8 +25,6 @@ struct Category {
           getCost(_getCost) {}
 };
 
-#ifdef _WIN32
-// unicode is buggy in windows
 const std::vector<std::string> functionNames = {
         "mean",
         "mean - std",
@@ -34,7 +32,7 @@ const std::vector<std::string> functionNames = {
         "mean + 2 std",
         "c squared"
 };
-#else  // not windows
+/*  // unicode is buggy
 const std::vector<std::string> functionNames = {
         "µ",
         "µ-σ",
@@ -42,7 +40,7 @@ const std::vector<std::string> functionNames = {
         "µ+2σ",
         "c squared"
 };
-#endif
+*/
 
 const std::vector<Category> CATEGORIES = {
         Category(1, "mean", functionNames[0], [](const EdgeWeight& edge){ return edge.getMean(); }),
