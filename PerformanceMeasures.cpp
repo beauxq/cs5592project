@@ -48,7 +48,6 @@ void PerformanceMeasures::processCategory(Table& outputTable,
     outputTable.push_back({"c_square", c_square});
 }
 
-
 void PerformanceMeasures::ComparePathsAndCheckEdge(Graph graph){
     Dijkstra algorithm(graph);
 

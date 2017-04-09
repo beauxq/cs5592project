@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "Graph.hpp"
+#include "Categories.h"
 
 constexpr double Dijkstra::infinity = std::numeric_limits<double>::max();
 
@@ -69,25 +70,10 @@ void Dijkstra::findPath(int category) {
                 // cost depends on category
                 double cost;
                 EdgeWeight edge = graph.getAdjacencyMatrix()[currentNode.nodeIndex][i];
-                switch (category) {
-                    case 1:
-                        cost = edge.getMean();
-                        break;
-                    case 2:
-                        cost = edge.getMean() - sqrt(edge.getVariance());
-                        break;
-                    case 3:
-                        cost = edge.getMean() + sqrt(edge.getVariance());
-                        break;
-                    case 4:
-                        cost = edge.getMean() + 2 * sqrt(edge.getVariance());
-                        break;
-                    case 5:
-                        cost = edge.getC_square();
-                        break;
-                    default:
-                        throw 1;  // TODO: make exception
-                }
+
+                // hack while we don't have multi-index container
+                // random access index is category number - 1
+                cost = CATEGORIES[category - 1].getCost(edge);
 
                 if (distances[currentNode.nodeIndex] + cost < distances[i]) {
                     distances[i] = distances[currentNode.nodeIndex] + cost;
