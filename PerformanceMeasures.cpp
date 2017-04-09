@@ -15,7 +15,18 @@ void PerformanceMeasures::processCategory(Table& outputTable,
                                           std::unordered_map<std::string, std::vector<std::string>>& edgeMap,
                                           std::unordered_map<std::string, std::vector<bool>>& edgeSelMap)
 {
-    double muMinusTheta = 0, mu = 0, muAddTheta = 0, muAdd2Theta = 0, c_square = 0;
+#ifdef _WIN32
+    // unicode buggy in windows
+    const std::string rightArrow = "->";
+#else  // not windows
+    const std::string rightArrow = "→";
+#endif
+
+    double tableData[CATEGORIES.size()];
+    // initialize to zero
+    for (size_t i = 0; i < CATEGORIES.size(); ++i) {
+        tableData[i] = 0;
+    }
 
     algorithm.findPath(category.number);
     std::cout << "Result for " << category.name << ":" << std::endl;
@@ -29,23 +40,20 @@ void PerformanceMeasures::processCategory(Table& outputTable,
          pathEdgeEndIter != outputPath.end();
          ++pathEdgeBeginIter, ++pathEdgeEndIter)
     {
-        std::string edgeString = std::to_string(*pathEdgeBeginIter) + "→" + std::to_string(*pathEdgeEndIter);
+        std::string edgeString = std::to_string(*pathEdgeBeginIter) + rightArrow + std::to_string(*pathEdgeEndIter);
         if (! edgeMap.count(edgeString))
             edgeMap[edgeString] = std::vector<std::string>();
         edgeMap[edgeString].push_back(category.name);
         EdgeWeight edge = algorithm.getGraph().getAdjacencyMatrix()[*pathEdgeBeginIter][*pathEdgeEndIter];
-        muMinusTheta += edge.getMean() - sqrt(edge.getVariance());
-        mu += edge.getMean();
-        muAddTheta += edge.getMean() + sqrt(edge.getVariance());
-        muAdd2Theta += edge.getMean() + 2 * sqrt(edge.getVariance());
-        c_square += edge.getC_square();
+
+        for (size_t i = 0; i < CATEGORIES.size(); ++ i) {
+            tableData[i] += CATEGORIES[i].getCost(edge);
+        }
     }
 
-    outputTable.push_back({"µ-σ", muMinusTheta});
-    outputTable.push_back({"µ", mu});
-    outputTable.push_back({"µ+σ", muAddTheta});
-    outputTable.push_back({"µ+2σ", muAdd2Theta});
-    outputTable.push_back({"c_square", c_square});
+    for (size_t i = 0; i < CATEGORIES.size(); ++i) {
+        outputTable.push_back({CATEGORIES[i].functionString, tableData[i]});
+    }
 }
 
 void PerformanceMeasures::ComparePathsAndCheckEdge(Graph graph){
@@ -65,15 +73,19 @@ void PerformanceMeasures::ComparePathsAndCheckEdge(Graph graph){
 
     // print the two table
     // performance table
-    std::cout << center("Criteria", 20) << center("µ-σ", 20) << center("µ", 23) << center("µ+σ", 23) << center("µ+2σ", 23) << center("c square", 25) << center("hops", 18) << std::endl;
+    std::cout << center("Criteria", 18);
+    for (size_t i = 0; i < CATEGORIES.size(); ++i) {
+        std::cout << center(CATEGORIES[i].functionString, 18);
+    }
+    std::cout << center("hops", 10) << std::endl;
 
     for (size_t categoryIndex = 0; categoryIndex < CATEGORIES.size(); ++categoryIndex) {
-        std::cout << center(CATEGORIES[categoryIndex].name, 20);
+        std::cout << center(CATEGORIES[categoryIndex].name, 18);
         for (int i = 0; i < allTables[categoryIndex].size(); ++i) {
-            std::cout << center(std::to_string(allTables[categoryIndex][i].second), 20) << " ";
+            std::cout << center(std::to_string(allTables[categoryIndex][i].second), 17) << " ";
         }
-        std::cout << center(std::to_string(allPaths[categoryIndex].size()), 20) << std::endl;
-
+        // hops
+        std::cout << center(std::to_string(allPaths[categoryIndex].size()), 10) << std::endl;
     }
 
     // print edge table
@@ -100,19 +112,20 @@ void PerformanceMeasures::ComparePathsAndCheckEdge(Graph graph){
     for (auto iter = edgeSelMap.begin(); iter != edgeSelMap.end(); iter++) {
         std::cout << center(iter->first, 10);
         for (int i = 0; i < CATEGORIES.size(); ++i) {
-            std::cout << center(std::to_string(iter->second[i]), 15) << " ";
+            std::cout << center(std::to_string(iter->second[i]), 14) << " ";
         }
         std::cout << std::endl;
     }
 }
 
-std::string PerformanceMeasures::center(const std::string s, const int w){
-    std::stringstream ss, spaces;
-    int padding = w - s.size();                 // count excess room to pad
-    for(int i=0; i<padding/2; ++i)
-        spaces << " ";
-    ss << spaces.str() << s << spaces.str();    // format with padding
-    if(padding>0 && padding%2!=0)               // if odd #, add 1 space
-        ss << " ";
-    return ss.str();
+std::string PerformanceMeasures::center(std::string s, const int& w) {
+    while (s.size() <= w - 2) {
+        s = " " + s + " ";
+    }
+
+    if (s.size() < w) {
+        s += " ";
+    }
+
+    return s;
 }

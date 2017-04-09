@@ -35,7 +35,7 @@ public:
                                 std::unordered_map<std::string, std::vector<bool>>& edgeSelMap);
 
     static void ComparePathsAndCheckEdge(Graph graph);
-    static std::string center(const std::string s, const int w);
+    static std::string center(std::string s, const int& w);
 };
 
 #endif /* PerformaceMeasures_hpp */
