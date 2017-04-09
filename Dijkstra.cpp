@@ -121,3 +121,7 @@ std::string Dijkstra::getShortestPathString() const {
 
     return toReturn;
 }
+
+Graph &Dijkstra::getGraph() {
+    return graph;
+}

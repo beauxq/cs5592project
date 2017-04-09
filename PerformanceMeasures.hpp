@@ -10,8 +10,6 @@
 #define PerformanceMeasures_hpp
 
 #include <stdio.h>
-#include "Graph.hpp"
-#include "Dijkstra.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -21,9 +19,23 @@
 #include <iomanip>
 #include <sstream>
 
+#include "Graph.hpp"
+#include "Dijkstra.h"
+#include "Categories.h"
+
+typedef std::vector<std::pair<std::string, double>> Table;
+
 class PerformanceMeasures{
 public:
-    void ComparePathsAndCheckEdge(Graph graph);
-    std::string center(const std::string s, const int w);
+    static void processCategory(Table& outputTable,
+                                std::list<size_t>& outputPath,
+                                Dijkstra& algorithm,
+                                const Category& category,
+                                std::unordered_map<std::string, std::vector<std::string>>& edgeMap,
+                                std::unordered_map<std::string, std::vector<bool>>& edgeSelMap);
+
+    static void ComparePathsAndCheckEdge(Graph graph);
+    static std::string center(const std::string s, const int w);
 };
+
 #endif /* PerformaceMeasures_hpp */

@@ -24,8 +24,6 @@ void testGraphImage(const std::string& fileName) {
 
     Dijkstra algorithm(graph);
     algorithm.findPath(1);
-    std::cout << algorithm.getShortestPathString() << std::endl;
-    std::cout << algorithm.getShortestDistance() << std::endl;
 
     GraphVisualizer gv(graph, algorithm.getShortestPath());
     gv.createImage(fileName, false);
@@ -63,8 +61,7 @@ void testAlgorithm(const std::string& fileName) {
 void testPerformanceMeasures(const std::string fileName) {
     Graph graph = InputParser::getGraphFromFile(fileName);
 
-    PerformanceMeasures performance;
-    performance.ComparePathsAndCheckEdge(graph);
+    PerformanceMeasures::ComparePathsAndCheckEdge(graph);
 }
 
 int main(int argc, const char * argv[]) {

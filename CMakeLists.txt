@@ -15,5 +15,6 @@ set(SOURCE_FILES
         image/ImageData.cpp
         GraphVisualizer.cpp
         image/Coordinate.h
-        PerformanceMeasures.cpp)
+        PerformanceMeasures.cpp
+        Categories.h)
 add_executable(cs5592project ${SOURCE_FILES})

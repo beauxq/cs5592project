@@ -28,6 +28,8 @@ public:
     double getShortestDistance() const;
     const std::list<size_t>& getShortestPath() const;
     std::string getShortestPathString() const;
+
+    Graph& getGraph();
 };
 
 
