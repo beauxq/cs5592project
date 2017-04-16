@@ -23,14 +23,16 @@ private:
 public:
     Dijkstra(const Graph& _graph);
 
+    /** sets the shortestDistance and shortestPath attributes */
     void findPath(int category);
 
     double getShortestDistance() const;
     const std::list<size_t>& getShortestPath() const;
+
+    /** make a string of shortestPath for display to a console */
     std::string getShortestPathString() const;
 
     Graph& getGraph();
 };
-
 
 #endif //CS5592PROJECT_DIJKSTRA_H

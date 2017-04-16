@@ -108,6 +108,6 @@ std::string Dijkstra::getShortestPathString() const {
     return toReturn;
 }
 
-Graph &Dijkstra::getGraph() {
+Graph& Dijkstra::getGraph() {
     return graph;
 }
