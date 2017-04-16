@@ -39,5 +39,4 @@ public:
     void writeFilePPM(std::string fileName);
 };
 
-
 #endif //CS5592PROJECT_IMAGEDATA_H

@@ -43,5 +43,4 @@ public:
     void createImage(const std::string& fileName, bool showShortest);
 };
 
-
 #endif //CS5592PROJECT_GRAPHVISUALIZER_H
